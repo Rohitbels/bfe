@@ -6,27 +6,49 @@
  * @param {number} wait
  * @returns {(...args:any[]) => any}
  */
+
+// This is a JavaScript coding problem from BFE.dev 
+
+/**
+ * @param {(...args:any[]) => any} func
+ * @param {number} wait
+ * @returns {(...args:any[]) => any}
+ */
+
+
 function throttle(func, wait) {
-  
-  let params;
-  let t;
-  let flag = true;
-  const callback=(...a) => {
-    if(flag ) {
-      func(a);
-      flag = false;
-    } else {
-      params = a;
-    }
-    if(!t) {
-      t = setTimeout(()=>{
-        if(params!== undefined)
-        func(params);
+ let flag = true;
+ let interval = true;
+ let params;
+ let lastparam;
+ const setTimeoutFunc = (func, wait) => {
+    
+    if(interval) {
+      setTimeout(()=>{
+        if(params !== lastparam) {
+          lastparam = params;
+          func(params)
+          interval = true;
+          setTimeoutFunc(func, wait)
+        } 
+        
+              
       },wait);
-    }
-  }
-  return callback;
-  
+    } 
 }
+ const c = (...a) => {
+   if(flag) {
+     func(a);
+     flag = false;
+     lastparam = a;
+      
+   }
+  setTimeoutFunc(func, wait); 
+  params = a; 
+ }
+ return c;
+}
+
+
 
 
