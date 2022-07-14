@@ -15,40 +15,39 @@
  * @returns {(...args:any[]) => any}
  */
 
-
 function throttle(func, wait) {
- let flag = true;
- let interval = true;
+  let first = true;
+ let setNextCall = true;
  let params;
  let lastparam;
  const setTimeoutFunc = (func, wait) => {
     
-    if(interval) {
+    if(setNextCall) {
       setTimeout(()=>{
         if(params !== lastparam) {
           lastparam = params;
           func(params)
-          interval = true;
+          setNextCall = true;
           setTimeoutFunc(func, wait)
-        } 
-        
-              
+        } else {
+          first = true;
+        }       
       },wait);
+      setNextCall = false;
     } 
 }
  const c = (...a) => {
-   if(flag) {
+   if(first) {
      func(a);
-     flag = false;
+     first = false;
      lastparam = a;
-      
+     setNextCall = true; 
    }
   setTimeoutFunc(func, wait); 
   params = a; 
  }
  return c;
 }
-
 
 
 
